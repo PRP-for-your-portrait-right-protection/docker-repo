@@ -6,7 +6,7 @@ services:
     container_name: db
 
 
-    restart: unless-stopped #컨테이너 스탑하기전까지 항상 재시작 (DB위주로 주로 작성합니다)
+    restart: unless-stopped #컨테이너 스탑하기전까지 항상 재시작
     #no: container를 재시작 시키지 않는다. (default)
     #on-failure[:max-retries]: container가 정상적으로 종료되지 않은 경우(exit code가 0이 아님)에만 재시작 시킨다. max-retries도 함께 주면 재시작 최대 시도횟수를 지정할 수 있고, 테스트 서버 등과 같은 리모트에 설정하면 좋을 것 같다.
     #always: container를 항상 재시작시킨다. exit code 상관 없이 항상 재시작 된다.
@@ -26,14 +26,17 @@ services:
     restart: unless-stopped
     container_name: flask
     build:
-      context: ./backend
-    #command: python -u app.py
+      context: ./backend-repo
+
     ports:
       - 5001:5000
     volumes:
-    - ./backend/:/backend/ 
+    - ./backend-repo/:/backend/ 
      #추가 설정 - 소스코드가 바뀌었다고 기존의 실행파일이 바뀌지 않는다. (재실행필요) 즉 이를 프레임워크에서 지원해야한다.
      # Flask면 추가 설정이 필요
+     
+    environment:
+     FLASK_DEBUG: 1 #리로딩 설정
      
     depends_on:
       - db
@@ -42,18 +45,18 @@ services:
   frontend:
     restart: unless-stopped
     build:
-      context: ./frontend
+      context: ./frontend-repo
     command: [ "yarn", "start" ]
     ports:
       - 80:3000
     volumes:
-      - ./frontend/:/frontend
+      - ./frontend-repo/:/frontend
    
-      #이 부분도 추가로 리로딩작업을 하려면 추가 설정이 필요합니다.
+    
     environment:
       - CI=true
       - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_BACKEND_URL=http://localhost:8000
+      - REACT_APP_BACKEND_URL=http://localhost:5000
     tty: true
 
 
