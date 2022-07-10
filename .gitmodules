@@ -1,3 +1,6 @@
 [submodule "backend-repo"]
 	path = backend-repo
 	url = https://github.com/PRP-for-your-portrait-right-protection/backend-repo.git
+[submodule "frontend-repo"]
+	path = frontend-repo
+	url = https://github.com/PRP-for-your-portrait-right-protection/frontend-repo.git
