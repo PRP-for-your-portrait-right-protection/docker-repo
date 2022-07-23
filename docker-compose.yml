@@ -20,7 +20,7 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     ports:
-      - 27017:27017
+      - 27018:27017
 
   backend:
     restart: unless-stopped
@@ -43,27 +43,48 @@ services:
       - db
 
      
-  frontend:
-    restart: unless-stopped
-    build:
-      context: ./frontend-repo
-    command: [ "yarn", "start" ]
-    ports:
-      - 80:3000
-    volumes:
-      - ./frontend-repo/:/frontend
+  # frontend:
+  #   restart: unless-stopped
+  #   build:
+  #     context: ./frontend-repo
+  #   command: [ "yarn", "start" ]
+  #   ports:
+  #     - 80:3000
+  #   volumes:
+  #     - ./frontend-repo/:/frontend
    
     
+  #   environment:
+  #     - CI=true
+  #     - CHOKIDAR_USEPOLLING=true
+  #     - REACT_APP_BACKEND_URL=http://localhost:5000
+  #   tty: true
+
+  rabbitmq:
+    hostname: rabbitmq
+    # 매니지먼트 플러그인이 적용된 이미지
+    image: "rabbitmq:3-management"
     environment:
-      - CI=true
-      - CHOKIDAR_USEPOLLING=true
-      - REACT_APP_BACKEND_URL=http://localhost:5000
-    tty: true
+    # 아이디 : admin
+    # 비밀번호 : mypass
+      - RABBITMQ_DEFAULT_USER=admin 
+      - RABBITMQ_DEFAULT_PASS=mypass 
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    restart: unless-stopped
 
-
-
-
-   
+  celery:
+    build:
+      context: ./celery-repo
+    volumes:
+    - ./celery-repo/:/celery/
+    # user? 자세히 모름
+    user: nobody
+    depends_on:
+      - rabbitmq
+      - backend
+      - db
 
 volumes: #네임드 볼륨이라고 표현함 , 단 도커에 원래 db를 올리는게 바람직하지 않으며 보통 클라우드 DB에 올리는게 좋다. (도커는 깨질 위험이 있고 날아갈 수 있는 위험이 있다. 이 방식은 가벼운 프로젝트)
   mongoVolume:
