@@ -5,7 +5,6 @@ services:
     image: mongo:latest
     container_name: db
 
-
     restart: unless-stopped #컨테이너 스탑하기전까지 항상 재시작
     #no: container를 재시작 시키지 않는다. (default)
     #on-failure[:max-retries]: container가 정상적으로 종료되지 않은 경우(exit code가 0이 아님)에만 재시작 시킨다. max-retries도 함께 주면 재시작 최대 시도횟수를 지정할 수 있고, 테스트 서버 등과 같은 리모트에 설정하면 좋을 것 같다.
@@ -20,71 +19,62 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     ports:
-      - 27018:27017
+      - 27017:27017
 
   backend:
     restart: unless-stopped
-    container_name: flask
+    container_name: backend
     build:
       context: ./backend-repo
 
     ports:
-      - 5001:5000
+      - 5001:5001
     volumes:
-    - ./backend-repo/:/backend/
+    - ./backend-repo/:/backend/ 
      #추가 설정 - 소스코드가 바뀌었다고 기존의 실행파일이 바뀌지 않는다. (재실행필요) 즉 이를 프레임워크에서 지원해야한다.
      # Flask면 추가 설정이 필요
-    command: flask run --host=0.0.0.0 --port=5000
      
     environment:
      FLASK_DEBUG: 1 #리로딩 설정
-     
-    depends_on:
-      - db
-
-     
-  # frontend:
-  #   restart: unless-stopped
-  #   build:
-  #     context: ./frontend-repo
-  #   command: [ "yarn", "start" ]
-  #   ports:
-  #     - 80:3000
-  #   volumes:
-  #     - ./frontend-repo/:/frontend
-   
     
-  #   environment:
-  #     - CI=true
-  #     - CHOKIDAR_USEPOLLING=true
-  #     - REACT_APP_BACKEND_URL=http://localhost:5000
-  #   tty: true
-
-  rabbitmq:
-    hostname: rabbitmq
-    # 매니지먼트 플러그인이 적용된 이미지
-    image: "rabbitmq:3-management"
-    environment:
-    # 아이디 : admin
-    # 비밀번호 : mypass
-      - RABBITMQ_DEFAULT_USER=admin 
-      - RABBITMQ_DEFAULT_PASS=mypass 
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-    restart: unless-stopped
-
-  celery:
-    build:
-      context: ./celery-repo
-    volumes:
-    - ./celery-repo/:/celery/
-    # user? 자세히 모름
-    user: nobody
+    command: gunicorn -w 1 -b 0.0.0.0:5001 app:app
     depends_on:
-      - rabbitmq
-      - backend
       - db
+
+     
+  frontend:
+    container_name: frontend
+    restart: unless-stopped
+    build:
+      context: ./frontend-repo
+    command: [ "yarn", "start" ]
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend-repo/:/frontend/
+      - build_folder:/frontend/build
+      # - ./frontend-repo/build:/frontend/build
+
+      - ./frontend-repo/node_modules/:/frontend/node_modules
+   
+    environment:
+      - CI=true
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_BACKEND_URL=http://localhost:5001
+    tty: true
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:8080
+    volumes:
+      - build_folder:/var/www/frontend
+      # - ./frontend-repo/:/var/www/frontend
+
+    depends_on:
+      - backend
+      - frontend
 
 volumes: #네임드 볼륨이라고 표현함 , 단 도커에 원래 db를 올리는게 바람직하지 않으며 보통 클라우드 DB에 올리는게 좋다. (도커는 깨질 위험이 있고 날아갈 수 있는 위험이 있다. 이 방식은 가벼운 프로젝트)
   mongoVolume:
+  build_folder: null
