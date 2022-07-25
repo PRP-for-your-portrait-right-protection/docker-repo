@@ -14,3 +14,5 @@ RUN apt-get install ffmpeg libsm6 libxext6  -y
 RUN pip install -r requirements.txt
 RUN pip install cmake
 RUN pip3 install dlib
+
+ENTRYPOINT celery -A tasks worker --loglevel=info
