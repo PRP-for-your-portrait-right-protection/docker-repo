@@ -1,2 +1,9 @@
 celery[mongodb]
 pymongo
+
+## AI 라이브러리
+numpy
+opencv-python
+moviepy
+matplotlib
+tensorflow
