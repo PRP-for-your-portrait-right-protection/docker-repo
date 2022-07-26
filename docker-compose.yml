@@ -30,24 +30,23 @@ services:
     ports:
       - 5001:5001
     volumes:
-    - ./backend-repo/:/backend/ 
-     #추가 설정 - 소스코드가 바뀌었다고 기존의 실행파일이 바뀌지 않는다. (재실행필요) 즉 이를 프레임워크에서 지원해야한다.
-     # Flask면 추가 설정이 필요
-     
+      - ./backend-repo/:/backend/
+        #추가 설정 - 소스코드가 바뀌었다고 기존의 실행파일이 바뀌지 않는다. (재실행필요) 즉 이를 프레임워크에서 지원해야한다.
+        # Flask면 추가 설정이 필요
+
     environment:
-     FLASK_DEBUG: 1 #리로딩 설정
-    
+      FLASK_DEBUG: 1 #리로딩 설정
+
     command: gunicorn -w 1 -b 0.0.0.0:5001 app:app
     depends_on:
       - db
 
-     
   frontend:
     container_name: frontend
     restart: unless-stopped
     build:
       context: ./frontend-repo
-    command: [ "yarn", "start" ]
+    command: ["yarn", "start"]
     ports:
       - 3000:3000
     volumes:
@@ -56,7 +55,7 @@ services:
       # - ./frontend-repo/build:/frontend/build
 
       - ./frontend-repo/node_modules/:/frontend/node_modules
-   
+
     environment:
       - CI=true
       - CHOKIDAR_USEPOLLING=true
@@ -74,6 +73,33 @@ services:
     depends_on:
       - backend
       - frontend
+
+  rabbitmq:
+    hostname: rabbitmq
+    # 매니지먼트 플러그인이 적용된 이미지
+    image: "rabbitmq:3-management"
+    environment:
+      # 아이디 : admin
+      # 비밀번호 : mypass
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    restart: unless-stopped
+
+  celery:
+    restart: unless-stopped
+    build:
+      context: ./celery-repo
+    volumes:
+      - ./celery-repo/:/celery/
+    # user? 자세히 모름
+    # user: nobody
+    depends_on:
+      - rabbitmq
+      - backend
+      - db
 
 volumes: #네임드 볼륨이라고 표현함 , 단 도커에 원래 db를 올리는게 바람직하지 않으며 보통 클라우드 DB에 올리는게 좋다. (도커는 깨질 위험이 있고 날아갈 수 있는 위험이 있다. 이 방식은 가벼운 프로젝트)
   mongoVolume:

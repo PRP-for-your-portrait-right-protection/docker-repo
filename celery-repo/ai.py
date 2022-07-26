@@ -3,7 +3,6 @@ from google.colab.patches import cv2_imshow
  
 import numpy as np
 import cv2
-import pafy
 import moviepy.editor as mp #소리 추출
 #--------
 # 라이브러리
