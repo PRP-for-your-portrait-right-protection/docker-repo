@@ -9,6 +9,7 @@ from PIL import ImageFont, ImageDraw, Image
 import tensorflow.keras 
 from tensorflow.keras import backend as K
 import time
+import ffmpeg
 # 셀러리
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -93,18 +94,12 @@ def mosaic(whitelistFaceImgList, videoUrl, user):
     count = 0 
     new_img_paths = []
     for img_path in img_paths:
-        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-        logger.info(img_paths)
-        logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         os.system("curl " + img_path + f' > {user}/{count}.jpg')
         img_paths[img_paths.index(img_path)] = f' > {user}/{count}.jpg'
         new_img_paths.append(f'{user}/{count}.jpg')
         count += 1
 
     for img_path in new_img_paths: # .items(): <---- key value 쌍 얻기
-        logger.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-        logger.info(img_path)
-        logger.info("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
         img = cv2.imread(img_path)
         _, img_shapes, _ = find_faces(img)
         descs.append([name, encode_faces(img, img_shapes)[0]])
@@ -116,23 +111,20 @@ def mosaic(whitelistFaceImgList, videoUrl, user):
 
     #best = video.getbest(preftype="mp4")
 
-    cap = cv2.VideoCapture(videoUrl) #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
+    os.system("curl " + videoUrl + f' > {user}/before.mp4')
+    cap = cv2.VideoCapture(f'{user}/before.mp4') #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
     ##cap = cv2.VideoCapture(0) # 노트북 웹캠을 카메라로 사용 
 
     xml = "haarcascade_frontalface_default.xml" #얼굴인식과 관련된 xml , 정확도가 떨어져서 이 부분만 따로 학습시키거나 해야..?
 
     res=(int(cap.get(3)),int(cap.get(4))) #resulotion
 
-    fourcc = cv2.VideoWriter_fourcc(*'DIVX') #codec
+    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
     out = cv2.VideoWriter(f'{user}/last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
-    # fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-    # out = cv2.VideoWriter('last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
-
 
     while True:
         # if(time.time() -  begin > 10):
         #  break
-        
         ret, img = cap.read() 
 
         if not ret: #영상을 읽어올 수 없다면 종료
@@ -167,26 +159,26 @@ def mosaic(whitelistFaceImgList, videoUrl, user):
             # cv2.rectangle(img, (x, y), (x+w, y+h), (0,255,0), 2) # 얼굴 영역 박스 
         
         
-            img = Image.fromarray(img)
-            draw = ImageDraw.Draw(img)
-            img = np.array(img)
+        img = Image.fromarray(img)
+        draw = ImageDraw.Draw(img)
+        img = np.array(img)
 
-            # cv2.imshow('result',img)
-            # k = cv2.waitKey(10) & 0xff # 'ESC' 키 누르면 종료
-            # if k == 27:
-            #     break #나중에 삭제
-                
-            out.write(img)
+        # cv2.imshow('result',img)
+        # k = cv2.waitKey(10) & 0xff # 'ESC' 키 누르면 종료
+        # if k == 27:
+        #     break #나중에 삭제
+            
+        out.write(img)
 
 
     cap.release()
     out.release()
 
-    cap_audio = mp.VideoFileClip(videoUrl)
+    cap_audio = mp.VideoFileClip(f'{user}/before.mp4')
     videoclip = mp.VideoFileClip(f'{user}/last.mp4')
     result = videoclip.set_audio(cap_audio.audio)
 
-    temp = f'{user}_lastTest_{datetime.now().strftime("%Y-%m-%d")}.mp4'
+    temp = f'{user}_after_{datetime.now().strftime("%Y-%m-%d")}.mp4'
 
     result.write_videofile(f'{user}/{temp}', 
     codec='libx264', 
@@ -202,7 +194,7 @@ def mosaic(whitelistFaceImgList, videoUrl, user):
         )
 
     try:
-        s3.upload_file(f'{user}/{temp}', AWS_S3_BUCKET_NAME, f'video/{temp}') # 동영상으로 바꾸기
+        s3.upload_file(f'{user}/{temp}', AWS_S3_BUCKET_NAME, f'video/{temp}', ExtraArgs={'ACL':'public-read'}) 
     except Exception as e:
         print(e)
         return False
