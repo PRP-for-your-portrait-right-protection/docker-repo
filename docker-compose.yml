@@ -19,7 +19,7 @@ services:
       MONGO_INITDB_DATABASE: webapp
       MONGODB_DATA_DIR: /data/db
     ports:
-      - 27017:27017
+      - 27018:27017
 
   backend:
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
     environment:
       FLASK_DEBUG: 1 #리로딩 설정
 
-    command: gunicorn -w 1 -b 0.0.0.0:5001 app:app
+    command: gunicorn -w 1 -b 0.0.0.0:5001 app:app --reload
     depends_on:
       - db
 
