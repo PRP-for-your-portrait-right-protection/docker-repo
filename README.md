@@ -21,9 +21,7 @@ PRP(for your portrait right protection)
 ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0772fde4-8afb-4f84-b049-724878e80282/Untitled.png)
 
 # 기술스택 - 각 포지션별로
-
-# 기술스택 - 각 포지션별로
-## **:번쩍: Tech Stack**
+## **:zap: Tech Stack**
 ```
 - Frontend: React
 - Backend : Flask, flask_restx, flask_mongoenginee, flask_migrate, flask_cors
@@ -32,10 +30,10 @@ PRP(for your portrait right protection)
 - Database: MongoDB
 - AI : Tensorflow, OpenCV, Colab
 - Deployment: Docker, AWS EC2, AWS S3
--API Test : Postman
--API Documentation : Swagger
--version control: Git, Github, Gitkraken
-Development Environment : Visual studio code, colab
+- API Test : Postman
+- API Documentation : Swagger
+- Version control: Git, Github, Gitkraken
+- Development Environment : Visual studio code, colab
 ```
 |Frontend|Backend|AI|DevOps|Other|
 |:------:|:------:|:---:|:----:|:---:|
