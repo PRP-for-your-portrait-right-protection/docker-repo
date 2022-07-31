@@ -22,22 +22,24 @@ PRP(for your portrait right protection)
 
 # 기술스택 - 각 포지션별로
 
-## **⚡ Tech Stack**
-
- `Frontend: React`
-
-`- Backend : Flask, flask_restx, flask_mongoenginee, flask_migrate, flask_cors
+# 기술스택 - 각 포지션별로
+## **:번쩍: Tech Stack**
+```
+- Frontend: React
+- Backend : Flask, flask_restx, flask_mongoenginee, flask_migrate, flask_cors
 - Web Server: Nginx
 - WSGI: Gunicorn
 - Database: MongoDB
 - AI : Tensorflow, OpenCV, Colab
 - Deployment: Docker, AWS EC2, AWS S3
 -API Test : Postman
--API Documentation : Swagger`
-
-`-version control: Git, Github, Gitkraken`
-
+-API Documentation : Swagger
+-version control: Git, Github, Gitkraken
 Development Environment : Visual studio code, colab
+```
+|Frontend|Backend|AI|DevOps|Other|
+|:------:|:------:|:---:|:----:|:---:|
+|![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)<br>![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)<br>![NodeJS](https://img.shields.io/badge/node.js-%2343853D.svg?style=for-the-badge&logo=node.js&logoColor=white)![Zustand]<br>|![Python](https://img.shields.io/badge/python-%2314354C.svg?style=for-the-badge&logo=python&logoColor=white)<br>![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)<br>![gunicorn]<br>![flask_restx]<br>![flask_mongoengine]<br>![flask_migrate]<br>![flask_cors]<br>|![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)</br>![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)%7C![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)<br>![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)<br>![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)%7C![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white)<br>![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)<br>![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)<br>![Visual Studio Code](https://img.shields.io/badge/VisualStudioCode-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)<br>![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)<br>![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)%7C
 
 # start 방법
 
