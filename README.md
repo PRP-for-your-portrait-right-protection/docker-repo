@@ -20,20 +20,17 @@ PRP(for your portrait right protection). 당신이 초상권을 지키지 않음
 
 ## **⚡ Tech Stack**
 
- `Frontend: React`
-
-`- Backend : Flask, flask_restx, flask_mongoenginee, flask_migrate, flask_cors
-- Web Server: Nginx
-- WSGI: Gunicorn
-- Database: MongoDB
-- AI : Tensorflow, OpenCV, Colab
-- Deployment: Docker, AWS EC2, AWS S3
--API Test : Postman
--API Documentation : Swagger`
-
+`- Frontend: React`
+`- Backend : Flask, flask_restx, flask_mongoenginee, flask_migrate, flask_cors`
+`- Web Server: Nginx`
+`- WSGI: Gunicorn`
+`- Database: MongoDB`
+`- AI : Tensorflow, OpenCV, Colab`
+`- Deployment: Docker, AWS EC2, AWS S3`
+`-API Test : Postman`
+`-API Documentation : Swagger`
 `-version control: Git, Github, Gitkraken`
-
-Development Environment : Visual studio code, colab
+`Development Environment : Visual studio code, colab`
 
 # start 방법
 
