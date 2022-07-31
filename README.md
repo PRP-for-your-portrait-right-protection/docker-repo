@@ -14,7 +14,7 @@ PRP(for your portrait right protection). 당신이 초상권을 지키지 않음
 
 # 소프트웨어 아키텍처
 
-!(https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0772fde4-8afb-4f84-b049-724878e80282/Untitled.png)
+<img src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0772fde4-8afb-4f84-b049-724878e80282/Untitled.png"/>
 
 # 기술스택 - 각 포지션별로
 
