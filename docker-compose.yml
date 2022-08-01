@@ -74,32 +74,76 @@ services:
       - backend
       - frontend
 
-  rabbitmq:
-    hostname: rabbitmq
-    # 매니지먼트 플러그인이 적용된 이미지
-    image: "rabbitmq:3-management"
-    environment:
-      # 아이디 : admin
-      # 비밀번호 : mypass
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=mypass
-    ports:
-      - "5673:5672"
-      - "15673:15672"
-    restart: unless-stopped
+  # rabbitmq:
+  #   hostname: rabbitmq
+  #   # 매니지먼트 플러그인이 적용된 이미지
+  #   image: "rabbitmq:3-management"
+  #   environment:
+  #     # 아이디 : admin
+  #     # 비밀번호 : mypass
+  #     - RABBITMQ_DEFAULT_USER=admin
+  #     - RABBITMQ_DEFAULT_PASS=mypass
+  #   ports:
+  #     - "5673:5672"
+  #     - "15673:15672"
+  #   restart: unless-stopped
 
-  celery:
-    restart: unless-stopped
-    build:
-      context: ./celery-repo
+  # celery:
+  #   restart: unless-stopped
+  #   build:
+  #     context: ./celery-repo
+  #   volumes:
+  #     - ./celery-repo/:/celery/
+  #   # user? 자세히 모름
+  #   # user: nobody
+  #   depends_on:
+  #     - rabbitmq
+  #     - backend
+  #     - db
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.2.1
+    ports: 
+      - 9090:9090
     volumes:
-      - ./celery-repo/:/celery/
-    # user? 자세히 모름
-    # user: nobody
+      - ./prometheus/:/etc/prometheus/
+      - ./prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    environment:
+      - PROMETHEUS_COMMON_DISABLE_HTTP2 
     depends_on:
-      - rabbitmq
       - backend
-      - db
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    environment:
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app,grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+       - /etc/localtime:/etc/localtime:ro
+       - ./grafana/:/var/lib/grafana
+       #- ./grafana/:/etc/grafana/provisioning/
+
+    ports:
+      - 3001:3001
+    restart: always
+
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager/:/etc/alertmanager/
+    # networks:
+    #   - app-tier
+    restart: always
+    command:
+      - '--config.file=/etc/alertmanager/config.yml'
+      - '--storage.path=/alertmanager'
 
 volumes: #네임드 볼륨이라고 표현함 , 단 도커에 원래 db를 올리는게 바람직하지 않으며 보통 클라우드 DB에 올리는게 좋다. (도커는 깨질 위험이 있고 날아갈 수 있는 위험이 있다. 이 방식은 가벼운 프로젝트)
   mongoVolume:
