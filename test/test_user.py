@@ -1,12 +1,13 @@
 import unittest
 import requests
 import json
+import config
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 class UserTest(unittest.TestCase):
 
     def setUp(self):
-        self.host = 'http://localhost:5001/api/v1'
+        self.host = config.path
 
     def test_users(self):
         email = "paurakh011@gmail.com"
@@ -14,7 +15,7 @@ class UserTest(unittest.TestCase):
             fields={
                 "email": email,
                 "password": "mycoolpassword",
-                "name": "Jone",
+                "name": "james",
                 "phone":"010-1234-5678"
             }
         )
@@ -28,7 +29,7 @@ class UserTest(unittest.TestCase):
     def test_users_email(self):
         multipart_data = MultipartEncoder(
             fields={
-                "name": "Jone",
+                "name": "james",
                 "phone":"010-1234-5678"
             }
         )
