@@ -9,6 +9,21 @@ class BlockCharacterTest(unittest.TestCase):
     def setUp(self):
         self.host = config.path
         self.token = config.token
+    
+    def test_block_character_origin_upload(self):
+        multipart_data = MultipartEncoder(
+            fields={
+                "file": ('166246.png', open(config.imgPath, 'rb'), 'png')
+            }
+        )
+        response = requests.post(self.host+'/block-characters/origin', headers={"Content-Type": multipart_data.content_type}, data=multipart_data)
+        data = json.loads(response.text)
+        id = data['id']
+        print("==================================")
+        print("test_block_character_origin_upload")
+        print(id)
+        print("==================================")
+        self.assertEqual(200, response.status_code)
         
     def test_block_character_origin_read(self):
         response = requests.get(self.host+'/block-characters/origin', headers={"token":self.token})
