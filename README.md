@@ -1,8 +1,7 @@
-### PRP
-
+# <img style="width: 45px; height: 50px" src="https://user-images.githubusercontent.com/93627156/182650226-66ba6885-dbf0-494f-8047-50f2992bf48d.png"/> PRP(for your portrait right protection)
 # 주제 소개
 
-PRP(for your portrait right protection)
+
 
 업로드 할 당신의 영상 속 인물들의 초상권을 보호할 수 있도록 이 서비스를 이용해보세요
 
