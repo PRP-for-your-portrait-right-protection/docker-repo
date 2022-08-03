@@ -24,11 +24,13 @@ app = Celery('tasks',
 # 모자이크
 @app.task()
 def run_mosaic(whitelistFaceImgList, videoUrl, user):
-    location = mosaic(logger, whitelistFaceImgList, videoUrl, user)
+    taskId = run_mosaic.request.id
+    location = mosaic(taskId, logger, whitelistFaceImgList, videoUrl, user)
     return location
 
 # 캐릭터
 @app.task()
 def run_character(whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user):
-    location = character(logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user)
+    taskId = run_character.request.id
+    location = character(taskId, logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user)
     return location

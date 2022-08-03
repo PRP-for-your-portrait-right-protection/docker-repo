@@ -2,13 +2,13 @@ import os
 import cv2
 from module.face_module import find_faces, encode_faces
 
-def download_file(img_paths, user):
+def download_file(img_paths, user, taskId):
     local_img_paths = []
     for img_path in img_paths:
         name = img_path.split('/')[4]
-        os.system("curl " + img_path + f' > {user}/{name}')
-        img_paths[img_paths.index(img_path)] = f' > {user}/{name}'
-        local_img_paths.append(f'{user}/{name}')
+        os.system("curl " + img_path + f' > {user}/{taskId}/{name}')
+        img_paths[img_paths.index(img_path)] = f' > {user}/{taskId}/{name}'
+        local_img_paths.append(f'{user}/{taskId}/{name}')
     return local_img_paths
 
 def read_img(local_img_paths):
@@ -20,7 +20,7 @@ def read_img(local_img_paths):
         descs.append([name, encode_faces(img, img_shapes)[0]])
     return descs
 
-def download_character_img(user, blockCharacterUrl):
+def download_character_img(user, taskId, blockCharacterUrl):
     name = blockCharacterUrl.split('/')[4]
-    os.system("curl " + blockCharacterUrl + f' > {user}/{name}')
-    return f'{user}/{name}'
+    os.system("curl " + blockCharacterUrl + f' > {user}/{taskId}/{name}')
+    return f'{user}/{taskId}/{name}'
