@@ -9,7 +9,7 @@ from module.file_module import download_file, read_img, download_character_img
 import os
 import shutil
 
-def mosaic(logger, whitelistFaceImgList, videoUrl, user):
+def mosaic(taskId, logger, whitelistFaceImgList, videoUrl, user):
     logger.info('Got Request - Starting work ')
     logger.info(whitelistFaceImgList)
     logger.info(videoUrl)
@@ -19,24 +19,27 @@ def mosaic(logger, whitelistFaceImgList, videoUrl, user):
     if not os.path.isdir(user):
         os.mkdir(user)
 
-    img_paths = whitelistFaceImgList   
+    if not os.path.isdir(f'{user}/{taskId}'):
+        os.mkdir(f'{user}/{taskId}')
+
+    img_paths = whitelistFaceImgList
 
     name = ""
 
-    local_img_paths = download_file(img_paths, user)
+    local_img_paths = download_file(img_paths, user, taskId)
     descs = read_img(local_img_paths)
         
-    np.save(f'{user}/descs.npy', descs)
+    np.save(f'{user}/{taskId}/descs.npy', descs)
 
-    os.system("curl " + videoUrl + f' > {user}/before.mp4')
-    cap = cv2.VideoCapture(f'{user}/before.mp4') #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
+    os.system("curl " + videoUrl + f' > {user}/{taskId}/before.mp4')
+    cap = cv2.VideoCapture(f'{user}/{taskId}/before.mp4') #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
 
     xml = "/celery/module/ai_requirements/haarcascade_frontalface_default.xml" #얼굴인식과 관련된 xml , 정확도가 떨어져서 이 부분만 따로 학습시키거나 해야..?
 
     res=(int(cap.get(3)),int(cap.get(4))) #resulotion
 
     fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    out = cv2.VideoWriter(f'{user}/last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
+    out = cv2.VideoWriter(f'{user}/{taskId}/last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
 
     while True:
         ret, img = cap.read() 
@@ -78,23 +81,23 @@ def mosaic(logger, whitelistFaceImgList, videoUrl, user):
     cap.release()
     out.release()
 
-    cap_audio = mp.VideoFileClip(f'{user}/before.mp4')
-    videoclip = mp.VideoFileClip(f'{user}/last.mp4')
+    cap_audio = mp.VideoFileClip(f'{user}/{taskId}/before.mp4')
+    videoclip = mp.VideoFileClip(f'{user}/{taskId}/last.mp4')
     result = videoclip.set_audio(cap_audio.audio)
 
     temp = f'{user}_after_{datetime.now().strftime("%Y-%m-%d")}.mp4'
 
-    result.write_videofile(f'{user}/{temp}', 
+    result.write_videofile(f'{user}/{taskId}/{temp}', 
     codec='libx264', 
     audio_codec='aac', 
     temp_audiofile='temp-audio.m4a', 
     remove_temp=True)
 
-    location = s3_upload(user, temp)
+    location = s3_upload(user, taskId, temp)
 
     # 만들었던 폴더 삭제
-    if os.path.exists(user):
-        shutil.rmtree(user)
+    if os.path.exists(f'{user}/{taskId}'):
+        shutil.rmtree(f'{user}/{taskId}')
 
     logger.info('Work Finished ')
 
@@ -103,26 +106,34 @@ def mosaic(logger, whitelistFaceImgList, videoUrl, user):
     else:
         return False
 
-def character(logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user):
+def character(taskId, logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user):
+    logger.info('Got Request - Starting work ')
+    logger.info(whitelistFaceImgList)
+    logger.info(videoUrl)
+    logger.info(user)
+    
     # 유저 이름으로 폴더 생성 (폴더가 존재하지 않는 경우에 생성)
     if not os.path.isdir(user):
         os.mkdir(user)
+
+    if not os.path.isdir(f'{user}/{taskId}'):
+        os.mkdir(f'{user}/{taskId}')
 
     img_paths = whitelistFaceImgList   
 
     name = ""
 
-    local_img_paths = download_file(img_paths, user)
+    local_img_paths = download_file(img_paths, user, taskId)
     descs = read_img(local_img_paths)
         
-    np.save("descs.npy", descs)
+    np.save(f'{user}/{taskId}/descs.npy', descs)
 
-    cap = cv2.VideoCapture(videoUrl) #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
+    os.system("curl " + videoUrl + f' > {user}/{taskId}/before.mp4')
+    cap = cv2.VideoCapture(f'{user}/{taskId}/before.mp4') #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
 
-    os.system("curl " + videoUrl + f' > {user}/before.mp4')
-    cap = cv2.VideoCapture(f'{user}/before.mp4') #직접 영상 사용  ##입력받은 영상의 url?을 넣습니다. 이부분도 props로 받아서 넣어주어야해요.
+    xml = "/celery/module/ai_requirements/haarcascade_frontalface_default.xml" #얼굴인식과 관련된 xml , 정확도가 떨어져서 이 부분만 따로 학습시키거나 해야..?
 
-    blockCharacterImgUrl = download_character_img(user, blockCharacterImgUrl)
+    blockCharacterImgUrl = download_character_img(user, taskId, blockCharacterImgUrl)
     mosaic_img = cv2.imread(blockCharacterImgUrl) #캐릭터 이미지로 변환 시 사용 ##변환시 사용하는 이미지입니다.
 
     res=(int(cap.get(3)),int(cap.get(4))) #resulotion
@@ -130,13 +141,12 @@ def character(logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user
     # fourcc = cv2.VideoWriter_fourcc(*'DIVX') #codec
     # out = cv2.VideoWriter('last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
     fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-    out = cv2.VideoWriter(f'{user}/last.mp4', fourcc, 30.0, res)  #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
+    out = cv2.VideoWriter(f'{user}/{taskId}/last.mp4', fourcc, 30.0, res) #저장할 영상의 파일 명  ##어떤파일명으로 저장할 지 정하지만 이 파일명은 최종이 아닙니다. 여기서 나온 결과물과 소리를 합성해야해요
 
     while True:
-        # if(time.time() -  begin > 10):
-        #  break
+        ret, img = cap.read()
+
         logger.info(datetime.now())
-        ret, img = cap.read() 
 
         if not ret: #영상을 읽어올 수 없다면 종료
             break;
@@ -172,23 +182,23 @@ def character(logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user
     cap.release()
     out.release()
 
-    cap_audio = mp.VideoFileClip(f'{user}/before.mp4')
-    videoclip = mp.VideoFileClip(f'{user}/last.mp4')
+    cap_audio = mp.VideoFileClip(f'{user}/{taskId}/before.mp4')
+    videoclip = mp.VideoFileClip(f'{user}/{taskId}/last.mp4')
     result = videoclip.set_audio(cap_audio.audio)
 
     temp = f'{user}_after_{datetime.now().strftime("%Y-%m-%d")}.mp4'
 
-    result.write_videofile(f'{user}/{temp}', 
+    result.write_videofile(f'{user}/{taskId}/{temp}', 
     codec='libx264', 
     audio_codec='aac', 
     temp_audiofile='temp-audio.m4a', 
     remove_temp=True)
 
-    location = s3_upload(user, temp)
+    location = s3_upload(user, taskId, temp)
 
     # 만들었던 폴더 삭제
-    if os.path.exists(user):
-        shutil.rmtree(user)
+    if os.path.exists(f'{user}/{taskId}'):
+        shutil.rmtree(f'{user}/{taskId}')
 
     logger.info('Work Finished ')
 
