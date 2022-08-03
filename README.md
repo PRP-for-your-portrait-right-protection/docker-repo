@@ -18,7 +18,7 @@ PRP(for your portrait right protection)
 
 # 소프트웨어 아키텍처
 
-![image](https://user-images.githubusercontent.com/93627156/182638662-15bff312-89e8-418b-96f5-6b407749818c.png)
+![image](https://user-images.githubusercontent.com/93627156/182640860-7ba4d408-dd70-4bdd-a45b-7adc4f7bee2d.png)
 
 # 기술스택 - 각 포지션별로
 ## **:zap: Tech Stack**
