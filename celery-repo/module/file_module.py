@@ -6,9 +6,10 @@ def download_file(img_paths, user):
     count = 0 
     local_img_paths = []
     for img_path in img_paths:
-        os.system("curl " + img_path + f' > {user}/{count}.jpg')
-        img_paths[img_paths.index(img_path)] = f' > {user}/{count}.jpg'
-        local_img_paths.append(f'{user}/{count}.jpg')
+        name = img_path.split('/')[4]
+        os.system("curl " + img_path + f' > {user}/{name}')
+        img_paths[img_paths.index(img_path)] = f' > {user}/{name}'
+        local_img_paths.append(f'{user}/{name}')
         count += 1
         return local_img_paths
 
