@@ -1,12 +1,5 @@
 import numpy as np
-# import cv2
-import moviepy.editor as mp #소리 추출
 import dlib
-# import tensorflow.keras 
-# from tensorflow.keras import backend as K
-# import matplotlib.pyplot as plt 
-# from PIL import ImageFont, ImageDraw, Image
-# import time
 
 def find_faces(img):
     detector = dlib.get_frontal_face_detector()

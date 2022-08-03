@@ -1,17 +1,13 @@
-from turtle import down
 import numpy as np
 import cv2
 import moviepy.editor as mp #소리 추출
-
 from PIL import ImageFont, ImageDraw, Image
-import os
-import shutil
 from datetime import datetime
-
 from module.face_module import find_faces, encode_faces
 from bucket.m_connection import s3_upload
-
 from module.file_module import download_file, read_img, download_character_img
+import os
+import shutil
 
 def mosaic(logger, whitelistFaceImgList, videoUrl, user):
     logger.info('Got Request - Starting work ')
