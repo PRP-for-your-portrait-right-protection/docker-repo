@@ -90,12 +90,6 @@ def mosaic(logger, whitelistFaceImgList, videoUrl, user):
     temp_audiofile='temp-audio.m4a', 
     remove_temp=True)
 
-    result.write_videofile('test.mp4', 
-    codec='libx264', 
-    audio_codec='aac', 
-    temp_audiofile='temp-audio.m4a', 
-    remove_temp=True)
-
     location = s3_upload(user, temp)
 
     # 만들었던 폴더 삭제
@@ -185,12 +179,6 @@ def character(logger, whitelistFaceImgList, blockCharacterImgUrl, videoUrl, user
     temp = f'{user}_after_{datetime.now().strftime("%Y-%m-%d")}.mp4'
 
     result.write_videofile(f'{user}/{temp}', 
-    codec='libx264', 
-    audio_codec='aac', 
-    temp_audiofile='temp-audio.m4a', 
-    remove_temp=True)
-
-    result.write_videofile('test.mp4', 
     codec='libx264', 
     audio_codec='aac', 
     temp_audiofile='temp-audio.m4a', 
