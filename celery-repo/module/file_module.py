@@ -3,15 +3,13 @@ import cv2
 from module.face_module import find_faces, encode_faces
 
 def download_file(img_paths, user):
-    count = 0 
     local_img_paths = []
     for img_path in img_paths:
         name = img_path.split('/')[4]
         os.system("curl " + img_path + f' > {user}/{name}')
         img_paths[img_paths.index(img_path)] = f' > {user}/{name}'
         local_img_paths.append(f'{user}/{name}')
-        count += 1
-        return local_img_paths
+    return local_img_paths
 
 def read_img(local_img_paths):
     name = ""
