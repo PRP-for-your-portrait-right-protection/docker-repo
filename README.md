@@ -41,17 +41,21 @@
 # start 방법
 
 ```
-$ cd “YOUR_DOWNLOAD_LOCATION”
+cd “YOUR_DOWNLOAD_LOCATION”
 
-$ git clone 울팀 주소
-**(향후 docker-compose단계에서 yarn명령어 추가하기)**
+git clone --recursive https://github.com/PRP-for-your-portrait-right-protection/docker-repo.git
+
+## insert configFile (m_config.py , module_config.py)
+
+docker-compose -f docker-compose.yml up -d --build
+
 ```
 
-backend 폴더에 당신이 수정해야할 몇가지 파일이 있습니다. (향후 아래 내용으로 파일 추가하기)
+### Setting File
 
-buket/
 
-m_config.py
+- docker-repo/backend-repo/bucket/m_config.py
+- docker-repo/celery-repo/bucket/m_config.py
 
 ```python
 AWS_ACCESS_KEY = "YOUR_AWS_ACCESS_KEY"
@@ -61,27 +65,17 @@ AWS_S3_BUCKET_NAME = "YOUR_AWS_S3_BUCKET_NAME"
 AWS_S3_BUCKET_URL = "YOUR_AWS_S3_BUCKET_URL"
 ```
 
-db/
 
-db_config.py
 
-```python
-HOST = 'db'
-PORT = 27017
-```
 
-module/
-
-module_config.py
+- docker-repo/backend-repo/module/module_config.py 
 
 ```python
 SECRET_KEY = "YOUR_TOKEN_SECRET_KEY"
 TOKEN_EXPIRED = 3600 #3600 sec, If you want longer, you can change this time.
 ```
 
-```
-$ docker-compose up --build
-```
+
 
 # 팀원 역할
 
