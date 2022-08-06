@@ -12,9 +12,7 @@
 
 당신이 이 서비스를 유용하게 이용하면 좋겠습니다. 감사합니다!
 
-# 소개영상
 
-(향후 데모영상 삽입)
 
 # 소프트웨어 아키텍처
 
@@ -76,11 +74,35 @@ SECRET_KEY = "YOUR_TOKEN_SECRET_KEY"
 TOKEN_EXPIRED = 3600 #3600 sec, If you want longer, you can change this time.
 ```
 
+# Feature
 
+### 회원가입 & 로그인
+  
+<img width ="100%" src="https://user-images.githubusercontent.com/93627156/183096747-80bbc89e-707b-4521-863c-114df4e48b37.gif">
+
+### 인물추가 및 사진 등록
+  
+<img width ="100%" src="https://user-images.githubusercontent.com/93627156/183097508-61981675-bd63-439c-b5e5-e47de91d9bb0.gif">
+
+### 비디오 업로드
+  
+<img width ="100%" src="https://user-images.githubusercontent.com/93627156/183097719-76186c59-885d-4c50-8247-09401a66e771.gif">
+
+### 효과 선택
+  
+<img width ="100%" src="https://user-images.githubusercontent.com/93627156/183098321-ed926ab4-ed4e-474f-9410-956184c6dcbe.gif">
+
+### 선택 결과 화면
+  
+<img width ="100%" src="https://user-images.githubusercontent.com/93627156/183097911-1e153f79-4615-4f13-a840-333049dc94a2.gif">
+
+
+### 처리된 결과 
+<img width ="100%" src="https://user-images.githubusercontent.com/78795820/183230525-39b52eb6-af48-4dc5-9ebd-c708448227b2.gif">
 
 # 팀원 역할
 
 | Name    | 박수현                                       |정태원                               | 박수연                                        | 조성현      | 이민지 | 박준혁                              |
 | ------- | --------------------------------------------- | ------------------------------------ | --------------------------------------------- | --------------------------------------- | -----| ----- |
-| Role    |     Backend    |             Frontend          |     Backend       | Frontend | Frontend | Backend  |
+| Role    |   PM, Backend, DevOps   |    Frontend, DevOps     | Backend, DevOps | Frontend | Frontend | Backend, AI, DevOps |
 | Github  | [@vivian0304](https://github.com/vivian0304) | [@teawon](https://github.com/teawon) | [@PARK-Su-yeon](https://github.com/PARK-Su-yeon) | [@vixloaze](https://github.com/vixloaze) | [@alswlfl29](https://github.com/alswlfl29)| [@JHPark02](https://github.com/JHPark02)|
